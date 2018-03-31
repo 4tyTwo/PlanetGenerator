@@ -1,5 +1,6 @@
 #pragma once
 #include "Map.h"
+#include "coefficients.cpp"
 #include <random>
 class HeightGenerator
 {
@@ -23,7 +24,7 @@ public:
 
   //Основной метод генерации карты высот
   void generate();
-
+  void smooth(); //Возводит все значения высоты в квадрат для получения более плавного перехода
   //Деструктор по-умолчанию
   ~HeightGenerator();
 
@@ -37,5 +38,8 @@ private:
   void diamond();
   float square_displace(int i, int j);
   float diamond_displace(int i,int j);
+  void createMountains(); //Маска 3х3 проходит
+  
+  void createOcean(); //Обращается к массиву предзаписанных коэффициентов для получения необходимого уровня воды
 };
 

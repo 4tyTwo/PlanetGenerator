@@ -120,6 +120,7 @@
     <ClInclude Include="Tile.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="coefficients.cpp" />
     <ClCompile Include="HeightGenerator.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Source.cpp" />

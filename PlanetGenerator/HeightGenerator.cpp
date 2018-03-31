@@ -74,7 +74,6 @@ void HeightGenerator::diamond() {
 
 void HeightGenerator::generate() {
   int iterations;
-  //data = Map(257,513);
   int x_size = data->x_size(), y_size = data->y_size();
   (*data)[0][0]->setHeight((float)(rand()) / RAND_MAX);
   (*data)[0][y_size - 1]->setHeight((float)(rand()) / RAND_MAX);
@@ -101,7 +100,28 @@ void HeightGenerator::generate() {
     diamond();
     square();
   }
+  smooth();
+  createOcean();
 }
+
+void HeightGenerator::smooth() {
+  for (int i=0; i<data->x_size(); i++)
+    for (int j=0; j<data->y_size();j++)
+      (*data)[i][j]->setHeight(pow((*data)[i][j]->Height(),2));
+}
+
+
+void HeightGenerator::createOcean() {
+  std::string type = "water";
+  int row = 100-int(surfacePerc_*100),collumn = (int)(roughness_*100);
+  float sea_level = coeff[row][collumn] * data->avgHeight();
+  for (int i=0;i<data->x_size();i++)
+    for (int j=0;j<data->y_size();j++)
+      if ((*data)[i][j]->Height() <= sea_level)
+        (*data)[i][j]->setType(type);
+}
+
+
 HeightGenerator::~HeightGenerator(){
 
 }
