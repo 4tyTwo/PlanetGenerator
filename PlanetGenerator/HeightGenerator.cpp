@@ -102,6 +102,7 @@ void HeightGenerator::generate() {
   }
   smooth();
   createOcean();
+  createMountains();
 }
 
 void HeightGenerator::smooth() {
@@ -114,13 +115,32 @@ void HeightGenerator::smooth() {
 void HeightGenerator::createOcean() {
   std::string type = "water";
   int row = 100-int(surfacePerc_*100),collumn = (int)(roughness_*100);
-  float sea_level = coeff[row][collumn] * data->avgHeight();
+  seaLevel_ = coeff[row][collumn] * data->avgHeight();
   for (int i=0;i<data->x_size();i++)
     for (int j=0;j<data->y_size();j++)
-      if ((*data)[i][j]->Height() <= sea_level)
+      if ((*data)[i][j]->Height() <= seaLevel_)
         (*data)[i][j]->setType(type);
 }
 
+void HeightGenerator::createMountains() {//Попробую маску 3х3
+  std::string type = "mountain";
+  float summ, max = data->maxHeight(), mountainLevel = (max - seaLevel_)*0.24f;
+  int num; //Кол-во клеток суши внутри маски
+  for (int i = 2; i < data->x_size() - 2; i++) 
+    for (int j = 2; j < data->y_size() - 2; j++) {
+      summ = 0.0f;
+      num = 0;
+      for (int k = i-2; k < i+3;k++){
+        for (int n = j-2; n < j+3; n++)
+          if ((*data)[k][n]->Height() > seaLevel_) {
+            summ += (*data)[k][n]->Height();
+            num++;
+          }
+      }
+      if ((float)(summ/num) - seaLevel_ > mountainLevel)
+        (*data)[i][j]->setType(type);
+    }
+}
 
 HeightGenerator::~HeightGenerator(){
 

@@ -78,7 +78,7 @@ void CreateBmp24(const char *fname, Map* hmap, float sea_level) //Коммент
 
 void CreateBmp242(const char *fname, Map* hmap) //Комментарии умерли
 {
-  std::string cmptype = "water";
+  std::string water = "water", mountain = "mountain";
   HANDLE hFile;
   DWORD RW;
   int i, j;
@@ -124,16 +124,22 @@ void CreateBmp242(const char *fname, Map* hmap) //Комментарии уме�
   WriteFile(hFile, Palette, 1024, &RW, NULL);
   for (i = 0; i < hmap->x_size(); i++) {
     for (j = 0; j < hmap->y_size(); j++) {
-      if ((*hmap)[i][j]->Type().compare(cmptype)) {
-        color.rgbtGreen = 255;
-        color.rgbtBlue = 0;
+      if (!(*hmap)[i][j]->Type().compare(water)) {
         color.rgbtRed = 0;
-      }
-      else {
         color.rgbtGreen = 0;
         color.rgbtBlue = 255;
-        color.rgbtRed = 0;
-
+      }
+      else {
+        if (!(*hmap)[i][j]->Type().compare(mountain)) {
+          color.rgbtRed = 142;
+          color.rgbtGreen = 71;
+          color.rgbtBlue = 53; 
+        }
+        else{
+          color.rgbtRed = 0;
+          color.rgbtGreen = 255;
+          color.rgbtBlue = 0;
+        }
       }
       WriteFile(hFile, &color, sizeof(color), &RW, NULL);
     }
@@ -148,16 +154,16 @@ int main() {
   srand(time(NULL));
   high_resolution_clock::time_point t1 = high_resolution_clock::now(),t2,t3,t4;
   Map *testmap = new Map(1025,2049);
-  HeightGenerator generator(testmap,0.6f,0.33f);
+  HeightGenerator generator(testmap,0.55f,0.33f);
   generator.generate();
   t2 = high_resolution_clock::now();
   CreateBmp242("C:\\Output\\bit.png",testmap);//Довольно медленно, что не удивительно. Примерно дважды дольше версии со сравнением высот
   t3 = high_resolution_clock::now();
-  CreateBmp24("C:\\Output\\bit2.png", testmap,testmap->avgHeight()*1.25);
+ // CreateBmp24("C:\\Output\\bit2.png", testmap,testmap->avgHeight()*1.25);
   t4 = high_resolution_clock::now();
-  auto duration1 = duration_cast<microseconds>(t4 - t3).count();
-  auto duration2 = duration_cast<microseconds>(t3 - t2).count();
-  std::cout<< duration1<<" regular way"<<std::endl<<duration2<<" new way"<<std::endl;
-  system("pause");
+ // auto duration1 = duration_cast<microseconds>(t4 - t3).count();
+ // auto duration2 = duration_cast<microseconds>(t3 - t2).count();
+  //std::cout<< duration1<<" regular way"<<std::endl<<duration2<<" new way"<<std::endl;
+//  system("pause");
   return 0;
 }

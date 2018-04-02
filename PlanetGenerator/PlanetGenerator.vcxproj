@@ -117,12 +117,14 @@
   <ItemGroup>
     <ClInclude Include="HeightGenerator.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="RiverGenerator.h" />
     <ClInclude Include="Tile.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="coefficients.cpp" />
     <ClCompile Include="HeightGenerator.cpp" />
     <ClCompile Include="Map.cpp" />
+    <ClCompile Include="RiverGenerator.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Tile.cpp" />
   </ItemGroup>

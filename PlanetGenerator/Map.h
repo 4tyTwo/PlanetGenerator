@@ -15,7 +15,7 @@ public:
 
   //—лужебные функции
   float avgHeight(); //—редн€€ высота карты
-  
+  float maxHeight(); //—ама€ высока€ точка карты
   ~Map();
 private:
   int x_size_,y_size_;
