@@ -2,17 +2,18 @@
 
 
 
-RiverGenerator::RiverGenerator()
-{
+RiverGenerator::RiverGenerator(){
 }
 
 
 void RiverGenerator::generation(int base_x, int base_y, int x, int y, int& sign) {
   std::string water = "water";
-  int length = y - base_y;
+  int length = abs(y - base_y);
+  if (abs(x - base_x > length))
+    length = abs(x - base_x);
   int mx = base_x + ((x - base_x) / 2), my = base_y + ((y - base_y) / 2);
   int newy = my, newx = mx;
-  if (length <= 32) {
+  if (length <= 8) {
     if (base_x == x) {
       for (int i = base_y; i<y; i++)
         (*data)[x][y]->setType(water);
@@ -20,6 +21,7 @@ void RiverGenerator::generation(int base_x, int base_y, int x, int y, int& sign)
     else {
       mx = base_x + ((x - base_x) / 2), my = base_y + ((y - base_y) / 2);
       int coeff = length / 2.4;
+      coeff = (coeff == 0) ? 1 : coeff;
       if (abs(x - base_x) > length) {
         length = abs(x - base_x);
         coeff = length / 5;
@@ -45,6 +47,7 @@ void RiverGenerator::generation(int base_x, int base_y, int x, int y, int& sign)
     }
   }
   int coeff = length / 7;
+  coeff = (coeff == 0) ? 1 : coeff;
   if (abs(x - base_x > length)) {
     length = abs(x - base_x);
     coeff = length / 12;
@@ -164,7 +167,7 @@ void RiverGenerator::curve(int x0, int y0, int x1, int y1, int x2, int y2) {
 }
 
 void RiverGenerator::curveSeg(int x0, int y0, int x1, int y1, int x2, int y2) {
-  /* plot a limited quadratic Bezier segment */
+  //Отрисовка элемента квадратичной кривой Безье
   std::string water = "water";
   int sx = x2 - x1, sy = y2 - y1;
   long xx = x0 - x1, yy = y0 - y1, xy; /* relative values for checks */
@@ -194,23 +197,81 @@ void RiverGenerator::curveSeg(int x0, int y0, int x1, int y1, int x2, int y2) {
   line(x0, y0, x2, y2); /* plot remaining part to end */
 }
 
-
-void RiverGenerator::generate() {
-  //Имея желаемое число рек, пытаемся нарисовать их, находя подходящее кол-во точек
-  std::string mountain = "mountain";
-  float max = data->maxHeight();
-  int length;
-  for (int rivers = 0; rivers < number; rivers++)
-    for (int i = 0; i < data->x_size(); i++)
-      for (int j = 0; j < data->y_size(); j++) {
-        if (!(*data)[i][j]->Type().compare(mountain) && i+4 < data->x_size() && j+4 < data->y_size())
-          if (!(*data)[i + 4][j + 4]->Type().compare(mountain)) {
-            //Нашли нормальный исток для реки, ищем место для устья
-            length = data->x_size() * data->y_size
-          }
-      }
+bool RiverGenerator::checkIntersect(int x0, int y0, int x1, int y1) //Возвращает true если пересечение есть, false иначе
+{
+  pt start,finish;
+  start.x = x0; start.y = y0; finish.x = x1; finish.y = y1;
+  for (int i = 0; i < coords.size(); i++) {
+    if(intersect(start,finish,coords[i].start, coords[i].finish))
+      return true;
+  }
+  pt_holder temp;
+  temp.start = start; temp.finish = finish;
+  coords.push_back(temp);
+  return false;
 }
 
-RiverGenerator::~RiverGenerator()
-{
+
+void RiverGenerator::generate() {
+  srand(time(NULL));
+  //Имея желаемое число рек, пытаемся нарисовать их, находя подходящее кол-во точек
+  std::string mountain = "mountain", water = "water";
+  bool flag;
+  int rivers = 0, chance,finx,finy,sign = (rand() % 2 == 1) ? 1 : -1 ,sign1,sign2;
+  float max = data->maxHeight();
+  int length, span;
+  while (rivers < number)
+    for (int i = 0; i < data->x_size(); i++){
+      for (int j = 0; j < data->y_size(); j++) {
+        flag = true;
+        if (!(*data)[i][j]->Type().compare(mountain) && i+4 < data->x_size() && j+4 < data->y_size())
+          if (!(*data)[i + 4][j + 4]->Type().compare(mountain) && rand()%1400 == 199) {
+            //Нашли нормальный исток для реки, ищем место для устья
+            length = (data->x_size() * data->y_size() / 20000.0f) * (1.0f + (rand()/RAND_MAX-0.5)); //Будем смотреть точки в квадрате 0.75 - 1.25 length
+          finx = rand() % length/2 + (length*3)/4; //Случайное смещение устья по горизонтали
+          finy = rand() % length / 2 + (length * 3) / 4; //Случайное смещение устья по вертикали
+          sign1 = (rand() % 2 == 1) ? 1:-1; //Знак смещения по горизонтали
+          if (i + 4 + finx*sign1 < 0)
+             finx = 0;
+          else
+             if(i + 4 + finx * sign1 >= data->x_size())
+              finx = data->x_size();
+             else
+              finx = i + 4 + finx * sign1;
+        
+          sign2 = (rand() % 2 == 1) ? 1 : -1;
+          if (j + 4 + finy * sign2 < 0)
+            finy = 0;
+          else
+            if (j + 4 + finy * sign2 >= data->y_size())
+              finy = data->y_size();
+            else
+              finy = j + 4 + finy * sign2;
+        if ((*data)[finx][finy]->Type().compare(mountain) != 0 && !checkIntersect(i+4,j+4,finx,finy)){
+            generation(i+4,j+4, finx, finy,sign);
+            rivers++;
+        }
+        }
+        if (rivers == number)
+          break;
+      }
+    if(rivers == number)
+      break;
+    }
+}
+
+ bool RiverGenerator::intersect_1(int a, int b, int c, int d) {
+  if (a > b)  std::swap(a, b);
+  if (c > d)  std::swap(c, d);
+  return std::max(a, c) <= std::min(b, d);
+}
+
+bool RiverGenerator::intersect(pt a, pt b, pt c, pt d) {
+  return intersect_1(a.x, b.x, c.x, d.x)
+    && intersect_1(a.y, b.y, c.y, d.y)
+    && area(a, b, c) * area(a, b, d) <= 0
+    && area(c, d, a) * area(c, d, b) <= 0;
+}
+
+RiverGenerator::~RiverGenerator(){
 }

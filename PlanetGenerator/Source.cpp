@@ -5,7 +5,7 @@
 #include <iostream>
 #include <chrono>
 #include <algorithm>
-#include <fstream>      // std::ifstream
+#include "RiverGenerator.h"
 using namespace std::chrono;
 
 
@@ -156,6 +156,8 @@ int main() {
   Map *testmap = new Map(1025,2049);
   HeightGenerator generator(testmap,0.55f,0.33f);
   generator.generate();
+  RiverGenerator rivergenerator(testmap, 20);
+  rivergenerator.generate();
   t2 = high_resolution_clock::now();
   CreateBmp242("C:\\Output\\bit.png",testmap);//Довольно медленно, что не удивительно. Примерно дважды дольше версии со сравнением высот
   t3 = high_resolution_clock::now();
