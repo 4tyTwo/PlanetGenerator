@@ -8,69 +8,49 @@ RiverGenerator::RiverGenerator(){
 
 void RiverGenerator::generation(int base_x, int base_y, int x, int y, int& sign) {
   std::string water = "water";
-  int length = abs(y - base_y);
-  if (abs(x - base_x > length))
-    length = abs(x - base_x);
-  int mx = base_x + ((x - base_x) / 2), my = base_y + ((y - base_y) / 2);
-  int newy = my, newx = mx;
-  if (length <= 8) {
-    if (base_x == x) {
-      for (int i = base_y; i<y; i++)
-        (*data)[x][y]->setType(water);
-    }
+  int newx, newy, length = (abs(x - base_x) > abs(y - base_y)) ? abs(x - base_x) : abs(y - base_y);
+  int coeff = length/5;
+  if (abs(x-base_x) > abs(y-base_y)){
+    //Если длиннее вдоль оси x
+    newx = base_x + ((x - base_x) / 2);//Середина по x
+    if(length > 12)
+      newy = base_y + ((y - base_y) / 2) + sign * (rand() % coeff + length / 12); //Смещенная кордината центра по y
     else {
-      mx = base_x + ((x - base_x) / 2), my = base_y + ((y - base_y) / 2);
-      int coeff = length / 2.4;
-      coeff = (coeff == 0) ? 1 : coeff;
-      if (abs(x - base_x) > length) {
-        length = abs(x - base_x);
-        coeff = length / 5;
-        newy = my + sign * (rand() % coeff + length / 12);
-        //sign*=-1;
-        if (newy >= data->y_size())
-          newy = data->y_size() - newx % data->y_size() - 1;
-        if (newy < 0)
-          newy = abs(newy);
-        int newx = mx;
-      }
-      else {
-        newx = mx + sign * (rand() % coeff + length / 4);
+      if(length > 7){
+        newy = base_y + ((y - base_y) / 2) + sign * (rand() % length / 3 + length / 3);
         sign *= -1;
-        if (newx >= data->x_size())
-          newx = data->x_size() - newx % data->x_size() - 1;
-        if (newx < 0)
-          newx = abs(newx);
-        newy = my;
+        sanitize(data->y_size(), &newy);
+        curve(base_x,base_y, newx, newy,x,y);
+        return;
       }
-      curve(base_x, base_y, newx, newy, x, y);
-      return;
+      else{
+        line(base_x,base_y,x,y);
+        sign *= -1;
+        return;
+      }
     }
-  }
-  int coeff = length / 7;
-  coeff = (coeff == 0) ? 1 : coeff;
-  if (abs(x - base_x > length)) {
-    length = abs(x - base_x);
-    coeff = length / 12;
-    newy = my + sign * (rand() % coeff + length / 35);
-    //sign *= -1;
-    if (newy < 0)
-      newy = abs(newy);
-    else
-      if (newy >= y)
-        newy = y - 1;
-    if (newy < 0)
-      newy = abs(newy);
+    sanitize(data->y_size(), &newy);
   }
   else {
-    newx = mx + sign * (rand() % coeff + length / 35);
-    sign *= -1;
-    if (newx < 0)
-      newx = abs(newx);
-    else
-      if (newx >= x)
-        newx = x - 1;
-    if (newx < 0)
-      newx = abs(newx);
+    //Если длиннее вдоль оси y
+    newy = base_y + ((y - base_y) / 2);//Середина по y
+    if (length > 12)
+      newx = base_x + ((x - base_x) / 2) + sign * (rand() % coeff + length / 12); //Смещенная кордината центра по y
+    else {
+      if(length>7){
+        newx = base_x + ((x - base_x) / 2) + sign * (rand() % length / 3 + length / 3);
+        sign*= -1;
+        sanitize(data->x_size(), &newx);
+        curve(base_x, base_y, newx, newy, x, y);
+        return;
+      }
+      else{
+        line(base_x,base_y,x,y);
+        sign *= -1;
+        return;
+      }
+    }
+    sanitize(data->x_size(), &newx);
   }
   generation(newx, newy, x, y, sign);
   generation(base_x, base_y, newx, newy, sign);
@@ -271,6 +251,13 @@ bool RiverGenerator::intersect(pt a, pt b, pt c, pt d) {
     && intersect_1(a.y, b.y, c.y, d.y)
     && area(a, b, c) * area(a, b, d) <= 0
     && area(c, d, a) * area(c, d, b) <= 0;
+}
+
+void RiverGenerator::sanitize(int size, int * target){
+  if (*target >= size)
+    *target = size - 1;
+  if (*target < 0)
+    *target = 0;
 }
 
 RiverGenerator::~RiverGenerator(){

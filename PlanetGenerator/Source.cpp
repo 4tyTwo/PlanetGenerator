@@ -63,9 +63,9 @@ void CreateBmp24(const char *fname, Map* hmap, float sea_level) //Коммент
       }
       else {
         color.rgbtGreen = 0;
-        color.rgbtBlue = 255 - (int)((sea_level - (*hmap)[i][j]->Height())* 255);
+        color.rgbtBlue = 255 - (int)((sea_level - (*hmap)[i][j]->Height()) * 255);
         color.rgbtRed = 0;
-        
+
       }
       WriteFile(hFile, &color, sizeof(color), &RW, NULL);
     }
@@ -133,9 +133,9 @@ void CreateBmp242(const char *fname, Map* hmap) //Комментарии уме�
         if (!(*hmap)[i][j]->Type().compare(mountain)) {
           color.rgbtRed = 142;
           color.rgbtGreen = 71;
-          color.rgbtBlue = 53; 
+          color.rgbtBlue = 53;
         }
-        else{
+        else {
           color.rgbtRed = 0;
           color.rgbtGreen = 255;
           color.rgbtBlue = 0;
@@ -152,20 +152,20 @@ void CreateBmp242(const char *fname, Map* hmap) //Комментарии уме�
 
 int main() {
   srand(time(NULL));
-  high_resolution_clock::time_point t1 = high_resolution_clock::now(),t2,t3,t4;
-  Map *testmap = new Map(1025,2049);
-  HeightGenerator generator(testmap,0.55f,0.33f);
+  high_resolution_clock::time_point t1 = high_resolution_clock::now(), t2, t3, t4;
+  Map *testmap = new Map(1025, 2049);
+  HeightGenerator generator(testmap, 0.55f, 0.33f);
   generator.generate();
   RiverGenerator rivergenerator(testmap, 20);
   rivergenerator.generate();
   t2 = high_resolution_clock::now();
-  CreateBmp242("C:\\Output\\bit.png",testmap);//Довольно медленно, что не удивительно. Примерно дважды дольше версии со сравнением высот
+  CreateBmp242("C:\\Output\\bit.png", testmap);//Довольно медленно, что не удивительно. Примерно дважды дольше версии со сравнением высот
   t3 = high_resolution_clock::now();
- // CreateBmp24("C:\\Output\\bit2.png", testmap,testmap->avgHeight()*1.25);
+  // CreateBmp24("C:\\Output\\bit2.png", testmap,testmap->avgHeight()*1.25);
   t4 = high_resolution_clock::now();
- // auto duration1 = duration_cast<microseconds>(t4 - t3).count();
- // auto duration2 = duration_cast<microseconds>(t3 - t2).count();
+  // auto duration1 = duration_cast<microseconds>(t4 - t3).count();
+  // auto duration2 = duration_cast<microseconds>(t3 - t2).count();
   //std::cout<< duration1<<" regular way"<<std::endl<<duration2<<" new way"<<std::endl;
-//  system("pause");
+  //  system("pause");
   return 0;
 }
