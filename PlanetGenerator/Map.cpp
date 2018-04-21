@@ -5,34 +5,39 @@
 Map::Map(){
 }
 
-Map::Map(int x_size, int y_size){
-  x_size_ = x_size;
-  y_size_ = y_size; //Количество строк
-  data = new Tile**[x_size_];
-  for (int i = 0; i<x_size_; ++i){
-    data[i] = new Tile*[y_size_];
-    for (int j=0; j<y_size_;++j)
+void Map::setSeaLevel(float sea){
+  SeaLevel_ = (abs(sea) > 1.0f) ? 1.0f : abs(sea);
+}
+
+Map::Map(int Height, int Width){
+  Height_ = Height;
+  Width_ = Width; //Количество строк
+  data = new Tile**[Height_];
+  for (int i = 0; i<Height_; ++i){
+    data[i] = new Tile*[Width_];
+    for (int j=0; j<Width_;++j)
       data[i][j] = new Tile();
   }
 }
 
 Tile* Map::get(int x, int y){
-  if (x>=0 && x < x_size_ && y>=0 && y < y_size_)
+  if (x>=0 && x < Height_ && y>=0 && y < Width_)
     return data[x][y];
+  return nullptr;
 }
 
 float Map::avgHeight(){
   float summ = 0.0;
-  for (int i = 0;i < x_size_; i++)
-    for (int j = 0; j < y_size_; j++)
+  for (int i = 0;i < Height_; i++)
+    for (int j = 0; j < Width_; j++)
       summ = summ + data[i][j]->Height();
-  return summ/(x_size_ * y_size_);
+  return summ/(Height_ * Width_);
 }
 
 float Map::maxHeight() {
   float max = 0.0f;
-  for (int i = 0; i < x_size_; i++)
-    for (int j = 0; j < y_size_; j++)
+  for (int i = 0; i < Height_; i++)
+    for (int j = 0; j < Width_; j++)
       if (data[i][j]->Height() > max)
         max = data[i][j]->Height();
   return max;

@@ -6,6 +6,7 @@
 #include <chrono>
 #include <algorithm>
 #include "RiverGenerator.h"
+#include "TemperatureSetter.h"
 using namespace std::chrono;
 
 
@@ -24,8 +25,8 @@ void CreateBmp24(const char *fname, Map* hmap, float sea_level) //Коммент
   BYTE Palette[1024];									// Ïàëèòðà
 
                                       // Ïóñòü ó íàñ áóäåò êàðòèíêà ðàçìåðîì 35 x 50 ïèêñåëåé
-  int Width = hmap->y_size();
-  int Height = hmap->x_size();
+  int Width = hmap->Width();
+  int Height = hmap->Height();
   memset(Palette, 0, 1024);								// Â ïàëèòðå ó íàñ íóëè
 
                                           // Çàïîëíèì èõ
@@ -54,8 +55,8 @@ void CreateBmp24(const char *fname, Map* hmap, float sea_level) //Коммент
   // double avg  = hmap.average();
   // Çàïèøåì ïàëèòðó
   WriteFile(hFile, Palette, 1024, &RW, NULL);
-  for (i = 0; i < hmap->x_size(); i++) {
-    for (j = 0; j < hmap->y_size(); j++) {
+  for (i = 0; i < hmap->Height(); i++) {
+    for (j = 0; j < hmap->Width(); j++) {
       if ((*hmap)[i][j]->Height() > sea_level) {
         color.rgbtGreen = 255 - (int)(((*hmap)[i][j]->Height() - sea_level) * 255);
         color.rgbtBlue = 0;
@@ -92,8 +93,8 @@ void CreateBmp242(const char *fname, Map* hmap) //Комментарии уме�
   BYTE Palette[1024];									// Ïàëèòðà
 
                                       // Ïóñòü ó íàñ áóäåò êàðòèíêà ðàçìåðîì 35 x 50 ïèêñåëåé
-  int Width = hmap->y_size();
-  int Height = hmap->x_size();
+  int Width = hmap->Width();
+  int Height = hmap->Height();
   memset(Palette, 0, 1024);								// Â ïàëèòðå ó íàñ íóëè
 
                                           // Çàïîëíèì èõ
@@ -122,8 +123,8 @@ void CreateBmp242(const char *fname, Map* hmap) //Комментарии уме�
   // double avg  = hmap.average();
   // Çàïèøåì ïàëèòðó
   WriteFile(hFile, Palette, 1024, &RW, NULL);
-  for (i = 0; i < hmap->x_size(); i++) {
-    for (j = 0; j < hmap->y_size(); j++) {
+  for (i = 0; i < hmap->Height(); i++) {
+    for (j = 0; j < hmap->Width(); j++) {
       if (!(*hmap)[i][j]->Type().compare(water)) {
         color.rgbtRed = 0;
         color.rgbtGreen = 0;
@@ -154,10 +155,11 @@ int main() {
   srand(time(NULL));
   high_resolution_clock::time_point t1 = high_resolution_clock::now(), t2, t3, t4;
   Map *testmap = new Map(1025, 2049);
-  HeightGenerator generator(testmap, 0.55f, 0.33f);
+  HeightGenerator generator(testmap, 0.56f, 0.4f);
   generator.generate();
   RiverGenerator rivergenerator(testmap, 20);
   rivergenerator.generate();
+  TemperatureSetter::setTemperature(testmap,26);
   t2 = high_resolution_clock::now();
   CreateBmp242("C:\\Output\\bit.png", testmap);//Довольно медленно, что не удивительно. Примерно дважды дольше версии со сравнением высот
   t3 = high_resolution_clock::now();

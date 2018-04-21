@@ -19,7 +19,7 @@ void RiverGenerator::generation(int base_x, int base_y, int x, int y, int& sign)
       if(length > 7){
         newy = base_y + ((y - base_y) / 2) + sign * (rand() % length / 3 + length / 3);
         sign *= -1;
-        sanitize(data->y_size(), &newy);
+        sanitize(getMap().Width(), &newy);
         curve(base_x,base_y, newx, newy,x,y);
         return;
       }
@@ -29,7 +29,7 @@ void RiverGenerator::generation(int base_x, int base_y, int x, int y, int& sign)
         return;
       }
     }
-    sanitize(data->y_size(), &newy);
+    sanitize(getMap().Width(), &newy);
   }
   else {
     //Если длиннее вдоль оси y
@@ -40,7 +40,7 @@ void RiverGenerator::generation(int base_x, int base_y, int x, int y, int& sign)
       if(length>7){
         newx = base_x + ((x - base_x) / 2) + sign * (rand() % length / 3 + length / 3);
         sign*= -1;
-        sanitize(data->x_size(), &newx);
+        sanitize(getMap().Height(), &newx);
         curve(base_x, base_y, newx, newy, x, y);
         return;
       }
@@ -50,7 +50,7 @@ void RiverGenerator::generation(int base_x, int base_y, int x, int y, int& sign)
         return;
       }
     }
-    sanitize(data->x_size(), &newx);
+    sanitize(getMap().Height(), &newx);
   }
   generation(newx, newy, x, y, sign);
   generation(base_x, base_y, newx, newy, sign);
@@ -70,7 +70,7 @@ void RiverGenerator::line(int x0, int y0, int x1, int y1){
       diry = -1;
     if (x1 - x > 0)
       for (x = x0; x < x1; x++) {
-        (*data)[x][y]->setType(water);
+        getMap()[x][y]->setType(water);
         error += deltaerr;
         if (error > 0.5) {
           y = y + diry;
@@ -79,7 +79,7 @@ void RiverGenerator::line(int x0, int y0, int x1, int y1){
       }
     else
       for (x = x0; x >= x1; x--) {
-        (*data)[x][y]->setType(water);
+        getMap()[x][y]->setType(water);
         error += deltaerr;
         if (error > 0.5) {
           y = y + diry;
@@ -97,7 +97,7 @@ void RiverGenerator::line(int x0, int y0, int x1, int y1){
       dirx = -1;
     if (y0 < y1)
       for (y = y0; y < y1; y++) {
-        (*data)[x][y]->setType(water);
+        getMap()[x][y]->setType(water);
         error += deltaerr;
         if (error > 0.5) {
           x = x + dirx;
@@ -106,7 +106,7 @@ void RiverGenerator::line(int x0, int y0, int x1, int y1){
       }
     else
       for (y = y0; y >= y1; y--) {
-        (*data)[x][y]->setType(water);
+        getMap()[x][y]->setType(water);
         error += deltaerr;
         if (error > 0.5) {
           x = x + dirx;
@@ -167,7 +167,7 @@ void RiverGenerator::curveSeg(int x0, int y0, int x1, int y1, int x2, int y2) {
     dy = 4.0*sx*cur*(y0 - y1) + yy - xy;
     xx += xx; yy += yy; err = dx + dy + xy; /* error 1st step */
     do {
-      (*data)[x0][y0]->setType(water); /* plot curve */
+      getMap()[x0][y0]->setType(water); /* plot curve */
       if (x0 == x2 && y0 == y2) return; /* last pixel -> curve finished */
       y1 = 2 * err < dx; /* save value for test of y step */
       if (2 * err > dy) { x0 += sx; dx -= xy; err += dy += yy; } /* x step */
@@ -198,24 +198,24 @@ void RiverGenerator::generate() {
   std::string mountain = "mountain", water = "water";
   bool flag;
   int rivers = 0, chance,finx,finy,sign = (rand() % 2 == 1) ? 1 : -1 ,sign1,sign2;
-  float max = data->maxHeight();
+  float max = getMap().maxHeight();
   int length, span;
   while (rivers < number)
-    for (int i = 0; i < data->x_size(); i++){
-      for (int j = 0; j < data->y_size(); j++) {
+    for (int i = 0; i < getMap().Height(); i++){
+      for (int j = 0; j < getMap().Width(); j++) {
         flag = true;
-        if (!(*data)[i][j]->Type().compare(mountain) && i+4 < data->x_size() && j+4 < data->y_size())
-          if (!(*data)[i + 4][j + 4]->Type().compare(mountain) && rand()%1400 == 199) {
+        if (!getMap()[i][j]->Type().compare(mountain) && i+4 < getMap().Height() && j+4 < getMap().Width())
+          if (!getMap()[i + 4][j + 4]->Type().compare(mountain) && rand()%1400 == 199) {
             //Нашли нормальный исток для реки, ищем место для устья
-            length = (data->x_size() * data->y_size() / 20000.0f) * (1.0f + (rand()/RAND_MAX-0.5)); //Будем смотреть точки в квадрате 0.75 - 1.25 length
+            length = (getMap().Height() * getMap().Width() / 20000.0f) * (1.0f + (rand()/RAND_MAX-0.5)); //Будем смотреть точки в квадрате 0.75 - 1.25 length
           finx = rand() % length/2 + (length*3)/4; //Случайное смещение устья по горизонтали
           finy = rand() % length / 2 + (length * 3) / 4; //Случайное смещение устья по вертикали
           sign1 = (rand() % 2 == 1) ? 1:-1; //Знак смещения по горизонтали
           if (i + 4 + finx*sign1 < 0)
              finx = 0;
           else
-             if(i + 4 + finx * sign1 >= data->x_size())
-              finx = data->x_size();
+             if(i + 4 + finx * sign1 >= getMap().Height())
+              finx = getMap().Height();
              else
               finx = i + 4 + finx * sign1;
         
@@ -223,11 +223,11 @@ void RiverGenerator::generate() {
           if (j + 4 + finy * sign2 < 0)
             finy = 0;
           else
-            if (j + 4 + finy * sign2 >= data->y_size())
-              finy = data->y_size();
+            if (j + 4 + finy * sign2 >= getMap().Width())
+              finy = getMap().Width();
             else
               finy = j + 4 + finy * sign2;
-        if ((*data)[finx][finy]->Type().compare(mountain) != 0 && !checkIntersect(i+4,j+4,finx,finy)){
+        if (getMap()[finx][finy]->Type().compare(mountain) != 0 && !checkIntersect(i+4,j+4,finx,finy)){
             generation(i+4,j+4, finx, finy,sign);
             rivers++;
         }

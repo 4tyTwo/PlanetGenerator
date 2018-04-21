@@ -1,24 +1,29 @@
 #pragma once
 #include "Tile.h"
+//Сюда надо записать всякую инфу типа максимальной высоты, уровня моря и т.д. так намного лучше.
 class Map
 {
 public:
   //Конструктор
-  Map(int x_size,int y_size);
+  Map(int Height,int Width);
   Map();
 
-  //Get функции
-  inline int x_size() { return x_size_; }
-  inline int y_size() { return y_size_; }
+  //Set методы
+  void setSeaLevel(float sea);
+  //Get методы
+  inline int Height() { return Height_; }
+  inline int Width() { return Width_; }
+  inline float SeaLevel() { return SeaLevel_; }
   Tile* get(int x,int y); //Получить по адресу
   Tile** operator[](int x) { return data[x]; } //Получить ряд по индексу ряда
 
-  //Служебные функции
+  //Служебные методы
   float avgHeight(); //Средняя высота карты
   float maxHeight(); //Самая высокая точка карты
   ~Map();
 private:
-  int x_size_,y_size_;
+  int Height_,Width_;
+  float SeaLevel_;
   Tile ***data;
 };
 

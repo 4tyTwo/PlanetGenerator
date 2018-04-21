@@ -1,5 +1,6 @@
 #pragma once
 #include "Map.h"
+#include "Generator.h"
 #include <time.h>
 struct pt { //PoinT
   int x, y;
@@ -7,11 +8,11 @@ struct pt { //PoinT
 struct pt_holder {//PoinT holder
   pt start, finish;
 };
-class RiverGenerator
+class RiverGenerator : public Generator
 {
 public:
   RiverGenerator();
-  RiverGenerator(Map* map,int num) { data = map; number = num; std::vector<pt_holder> temp; coords = temp; }
+  RiverGenerator(Map* map,int num) {setMap(map); number = num; std::vector<pt_holder> temp; coords = temp; }
 
   ~RiverGenerator();
 
@@ -19,7 +20,7 @@ public:
   
   void generation(int base_x, int base_y, int x, int y, int& sign);
 private:
-  Map* data;
+  //Map* data;
   int number;
   std::vector<pt_holder> coords;
   //Методы для рисования кривых рек

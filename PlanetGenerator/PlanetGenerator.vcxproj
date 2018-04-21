@@ -115,17 +115,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Generator.h" />
     <ClInclude Include="HeightGenerator.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="RiverGenerator.h" />
+    <ClInclude Include="TemperatureSetter.h" />
     <ClInclude Include="Tile.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="coefficients.cpp" />
+    <ClCompile Include="Generator.cpp" />
     <ClCompile Include="HeightGenerator.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="RiverGenerator.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="TemperatureSetter.cpp" />
     <ClCompile Include="Tile.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
