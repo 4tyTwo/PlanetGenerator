@@ -215,7 +215,7 @@ void RiverGenerator::generate() {
              finx = 0;
           else
              if(i + 4 + finx * sign1 >= getMap().Height())
-              finx = getMap().Height();
+              finx = getMap().Height()-1;
              else
               finx = i + 4 + finx * sign1;
         
@@ -224,7 +224,7 @@ void RiverGenerator::generate() {
             finy = 0;
           else
             if (j + 4 + finy * sign2 >= getMap().Width())
-              finy = getMap().Width();
+              finy = getMap().Width()-1;
             else
               finy = j + 4 + finy * sign2;
         if (getMap()[finx][finy]->Type().compare(mountain) != 0 && !checkIntersect(i+4,j+4,finx,finy)){
