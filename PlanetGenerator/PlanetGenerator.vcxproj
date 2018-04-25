@@ -76,7 +76,13 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\SFML-2.4.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>SFML_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>C:\SFML-2.4.2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>"sfml-graphics-s-d.lib";"sfml-window-s-d.lib";"sfml-system-s-d.lib";"opengl32.lib";"winmm.lib";"gdi32.lib";"freetype.lib";"jpeg.lib";%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -120,6 +126,7 @@
     <ClInclude Include="HumidityGenerator.h" />
     <ClInclude Include="HumiditySetter.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="MapDrawer.h" />
     <ClInclude Include="RiverGenerator.h" />
     <ClInclude Include="TemperatureSetter.h" />
     <ClInclude Include="Tile.h" />
@@ -129,8 +136,8 @@
     <ClCompile Include="Generator.cpp" />
     <ClCompile Include="HeightGenerator.cpp" />
     <ClCompile Include="HumidityGenerator.cpp" />
-    <ClCompile Include="HumiditySetter.cpp" />
     <ClCompile Include="Map.cpp" />
+    <ClCompile Include="MapDrawer.cpp" />
     <ClCompile Include="RiverGenerator.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="TemperatureSetter.cpp" />

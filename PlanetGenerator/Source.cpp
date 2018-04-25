@@ -7,8 +7,8 @@
 #include <algorithm>
 #include "RiverGenerator.h"
 #include "TemperatureSetter.h"
-#include "HumiditySetter.h"
 #include "HumidityGenerator.h"
+#include "MapDrawer.h"
 using namespace std::chrono;
 
 
@@ -259,7 +259,7 @@ void createTempMap(const char *fname, Map* hmap) //Комментарии уме
   WriteFile(hFile, Palette, 1024, &RW, NULL);
   for (i = 0; i < hmap->Height(); i++) {
     for (j = 0; j < hmap->Width(); j++) {
-      if ((*hmap)[i][j]->Type().compare(water))
+      if ((*hmap)[i][j]->Type().compare(water)){
         if ((*hmap)[i][j]->Temperature() > 25){
         // 25+
         color.rgbtRed = 255;
@@ -304,6 +304,12 @@ void createTempMap(const char *fname, Map* hmap) //Комментарии уме
             }
           }
       }
+      }
+      else {
+        color.rgbtRed = 0;
+        color.rgbtGreen = 0;
+        color.rgbtBlue = 0;
+      }
       WriteFile(hFile, &color, sizeof(color), &RW, NULL);
     }
     // Âûðîâíÿåì ïî ãðàíèöå
@@ -324,10 +330,12 @@ int main() {
   HumidityGenerator humgenerator(testmap,0.3f);
   humgenerator.generate();
   TemperatureSetter::setTemperature(testmap,45);
-  createHumidMap("C:\\Output\\Humid.png",testmap);
+  //createHumidMap("C:\\Output\\Humid.png",testmap);
   t2 = high_resolution_clock::now();
-  createTempMap("C:\\Output\\Temp.png",testmap);
-  CreateBmp242("C:\\Output\\bit.png", testmap);//Довольно медленно, что не удивительно. Примерно дважды дольше версии со сравнением высот
+  //createTempMap("C:\\Output\\Temp.png",testmap);
+  //CreateBmp242("C:\\Output\\bit.png", testmap);//Довольно медленно, что не удивительно. Примерно дважды дольше версии со сравнением высот
+  MapDrawer drawer(testmap);
+  drawer.drawPhysicalMap("C:\\Output\\Map.png");
   t3 = high_resolution_clock::now();
   // CreateBmp24("C:\\Output\\bit2.png", testmap,testmap->avgHeight()*1.25);
   t4 = high_resolution_clock::now();
