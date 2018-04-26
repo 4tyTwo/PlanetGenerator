@@ -12,7 +12,7 @@
 using namespace std::chrono;
 
 
-void CreateBmp24(const char *fname, Map* hmap, float sea_level) //Комментарии умерли
+/*void CreateBmp24(const char *fname, Map* hmap, float sea_level) //Комментарии умерли
 {
   HANDLE hFile;
   DWORD RW;
@@ -316,7 +316,7 @@ void createTempMap(const char *fname, Map* hmap) //Комментарии уме
     WriteFile(hFile, Palette, Width % 4, &RW, NULL);
   }
   CloseHandle(hFile);
-}
+} */
 
 int main() {
   srand(time(NULL));

@@ -1,7 +1,15 @@
 #include "BiomeGenerator.h"
 
-static const float tempCoeffs[6] = { 0.31f, 0.41f, 0.46f, 0.68f, 0.74f, 1.0f };
-static const float humidCoeffs[6] = { 0.25f, 0.31f, 0.47f, 0.64f, 0.72f, 1.0f };
+const float BiomeGenerator::tempCoeffs[6] = { 0.31f, 0.41f, 0.46f, 0.68f, 0.74f, 1.0f };
+const float BiomeGenerator::humidCoeffs[6] = { 0.25f, 0.31f, 0.47f, 0.64f, 0.72f, 1.0f };
+
+void BiomeGenerator::generate() {
+
+}
+
+int BiomeGenerator::placeZone(int tempZone, int humidZone) {
+  return -1;
+}
 
 BiomeGenerator::BiomeGenerator(){
   float maxHumid = getMap().maxHumidity(), maxTemp = getMap().maxTemperature();
@@ -34,6 +42,5 @@ bool BiomeGenerator::between(float lower, float upper, float checked)
   return false;
 }
 
-BiomeGenerator::~BiomeGenerator()
-{
+BiomeGenerator::~BiomeGenerator(){
 }

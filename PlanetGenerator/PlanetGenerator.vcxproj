@@ -125,7 +125,6 @@
     <ClInclude Include="Generator.h" />
     <ClInclude Include="HeightGenerator.h" />
     <ClInclude Include="HumidityGenerator.h" />
-    <ClInclude Include="HumiditySetter.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="MapDrawer.h" />
     <ClInclude Include="RiverGenerator.h" />

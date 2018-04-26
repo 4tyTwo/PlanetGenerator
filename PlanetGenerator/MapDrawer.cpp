@@ -13,11 +13,11 @@ void MapDrawer::drawPhysicalMap(const std::string & filename){
   sf::Uint8 *pixels = new sf::Uint8[height * width * 4]; //Не забудь почистить память потом
   for (int i = 0; i < width; i++)
     for (int j = 0; j < height; j++) {
-      if (!getMap()[j][i]->Type().compare(water)){
+      if (getMap()[j][i]->Type() == 0 || getMap()[j][i]->Type() == 12){
           red = 0, green = 0, blue = 255;
       }
       else {
-        if (!getMap()[j][i]->Type().compare(mountain)) {
+        if (getMap()[j][i]->Type() == 1) {
           red = 142, green = 71, blue = 53;
         }
         else {
@@ -55,13 +55,12 @@ void MapDrawer::drawHumidMap(const std::string & filename) {
 }
 
 void MapDrawer::drawTempMap(const std::string & filename){
-  std::string water = "water", mountain = "mountain";
   int height = getMap().Height(), width = getMap().Width();
   sf::Uint8 red = 0, green = 0, blue, alpha = 255;
   sf::Uint8 *pixels = new sf::Uint8[height * width * 4]; //Не забудь почистить память потом
   for (int i = 0; i < width; i++)
     for (int j = 0; j < height; j++) {
-        if (getMap()[j][i]->Type().compare(water)){
+        if (getMap()[j][i]->Type()!= 0 && getMap()[j][i]->Type() != 12){
           if (getMap()[j][i]->Temperature() > 25) {
             // 25+
             red = 255;

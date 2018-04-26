@@ -109,10 +109,9 @@ void HumidityGenerator::generate() {
 
 HumidityGenerator::HumidityGenerator(Map * newdata, float roughness){
   setMap(newdata); setRoughness(roughness);
-  std::string water = "water";
   for (int i = 0; i < getMap().Height(); i++)
     for (int j = 0; j < getMap().Width(); j++)
-      if (!getMap()[i][j]->Type().compare(water))
+      if (getMap()[i][j]->Type() == 0 || getMap()[i][j]->Type() == 12)
         getMap()[i][j]->setHumid(1.0f);
 }
 

@@ -7,7 +7,6 @@ RiverGenerator::RiverGenerator(){
 
 
 void RiverGenerator::generation(int base_x, int base_y, int x, int y, int& sign) {
-  std::string water = "water";
   int newx, newy, length = (abs(x - base_x) > abs(y - base_y)) ? abs(x - base_x) : abs(y - base_y);
   int coeff = length/5;
   if (abs(x-base_x) > abs(y-base_y)){
@@ -70,7 +69,7 @@ void RiverGenerator::line(int x0, int y0, int x1, int y1){
       diry = -1;
     if (x1 - x > 0)
       for (x = x0; x < x1; x++) {
-        getMap()[x][y]->setType(water);
+        getMap()[x][y]->setType(12); //Река
         error += deltaerr;
         if (error > 0.5) {
           y = y + diry;
@@ -79,7 +78,7 @@ void RiverGenerator::line(int x0, int y0, int x1, int y1){
       }
     else
       for (x = x0; x >= x1; x--) {
-        getMap()[x][y]->setType(water);
+        getMap()[x][y]->setType(12); //Река
         error += deltaerr;
         if (error > 0.5) {
           y = y + diry;
@@ -97,7 +96,7 @@ void RiverGenerator::line(int x0, int y0, int x1, int y1){
       dirx = -1;
     if (y0 < y1)
       for (y = y0; y < y1; y++) {
-        getMap()[x][y]->setType(water);
+        getMap()[x][y]->setType(12);
         error += deltaerr;
         if (error > 0.5) {
           x = x + dirx;
@@ -106,7 +105,7 @@ void RiverGenerator::line(int x0, int y0, int x1, int y1){
       }
     else
       for (y = y0; y >= y1; y--) {
-        getMap()[x][y]->setType(water);
+        getMap()[x][y]->setType(12);
         error += deltaerr;
         if (error > 0.5) {
           x = x + dirx;
@@ -148,7 +147,6 @@ void RiverGenerator::curve(int x0, int y0, int x1, int y1, int x2, int y2) {
 
 void RiverGenerator::curveSeg(int x0, int y0, int x1, int y1, int x2, int y2) {
   //Отрисовка элемента квадратичной кривой Безье
-  std::string water = "water";
   int sx = x2 - x1, sy = y2 - y1;
   long xx = x0 - x1, yy = y0 - y1, xy; /* relative values for checks */
   double dx, dy, err, cur = xx * sy - yy * sx; /* curvature */
@@ -167,7 +165,7 @@ void RiverGenerator::curveSeg(int x0, int y0, int x1, int y1, int x2, int y2) {
     dy = 4.0*sx*cur*(y0 - y1) + yy - xy;
     xx += xx; yy += yy; err = dx + dy + xy; /* error 1st step */
     do {
-      getMap()[x0][y0]->setType(water); /* plot curve */
+      getMap()[x0][y0]->setType(12); /* plot curve */
       if (x0 == x2 && y0 == y2) return; /* last pixel -> curve finished */
       y1 = 2 * err < dx; /* save value for test of y step */
       if (2 * err > dy) { x0 += sx; dx -= xy; err += dy += yy; } /* x step */
@@ -195,7 +193,6 @@ bool RiverGenerator::checkIntersect(int x0, int y0, int x1, int y1) //Возвр
 void RiverGenerator::generate() {
   srand(time(NULL));
   //Имея желаемое число рек, пытаемся нарисовать их, находя подходящее кол-во точек
-  std::string mountain = "mountain", water = "water";
   bool flag;
   int rivers = 0, chance,finx,finy,sign = (rand() % 2 == 1) ? 1 : -1 ,sign1,sign2;
   float max = getMap().maxHeight();
@@ -204,8 +201,8 @@ void RiverGenerator::generate() {
     for (int i = 0; i < getMap().Height(); i++){
       for (int j = 0; j < getMap().Width(); j++) {
         flag = true;
-        if (!getMap()[i][j]->Type().compare(mountain) && i+4 < getMap().Height() && j+4 < getMap().Width())
-          if (!getMap()[i + 4][j + 4]->Type().compare(mountain) && rand()%1400 == 199) {
+        if (getMap()[i][j]->Type() == 1 && i+4 < getMap().Height() && j+4 < getMap().Width()) //Если гора
+          if (getMap()[i + 4][j + 4]->Type() == 1 && rand()%1400 == 199) { //Если опять гора
             //Нашли нормальный исток для реки, ищем место для устья
             length = (getMap().Height() * getMap().Width() / 20000.0f) * (1.0f + (rand()/RAND_MAX-0.5)); //Будем смотреть точки в квадрате 0.75 - 1.25 length
           finx = rand() % length/2 + (length*3)/4; //Случайное смещение устья по горизонтали
@@ -227,7 +224,7 @@ void RiverGenerator::generate() {
               finy = getMap().Width()-1;
             else
               finy = j + 4 + finy * sign2;
-        if (getMap()[finx][finy]->Type().compare(mountain) != 0 && !checkIntersect(i+4,j+4,finx,finy)){
+        if (getMap()[finx][finy]->Type() != 1 && !checkIntersect(i+4,j+4,finx,finy)){
             generation(i+4,j+4, finx, finy,sign);
             rivers++;
         }

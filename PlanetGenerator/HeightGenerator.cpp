@@ -113,17 +113,15 @@ void HeightGenerator::smooth() {
 
 
 void HeightGenerator::createOcean() {
-  std::string type = "water";
   int row = 100-int(surfacePerc_*100),collumn = (int)(roughness_*100);
   getMap().setSeaLevel(coeff[row][collumn] * getMap().avgHeight());
   for (int i=0;i<getMap().Height();i++)
     for (int j=0;j<getMap().Width();j++)
       if (getMap()[i][j]->Height() <= getMap().SeaLevel())
-        getMap()[i][j]->setType(type);
+        getMap()[i][j]->setType(0);
 }
 
 void HeightGenerator::createMountains() {//Попробую маску 3х3
-  std::string type = "mountain";
   float summ, max = getMap().maxHeight(), mountainLevel = (max - getMap().SeaLevel())*0.24f;
   int num; //Кол-во клеток суши внутри маски
   for (int i = 1; i < getMap().Height() - 1; i++) 
@@ -138,7 +136,7 @@ void HeightGenerator::createMountains() {//Попробую маску 3х3
           }
       }
       if ((float)(summ/num) - getMap().SeaLevel() > mountainLevel)
-        getMap()[i][j]->setType(type);
+        getMap()[i][j]->setType(1);
     }
 }
 
