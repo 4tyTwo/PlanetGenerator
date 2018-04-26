@@ -8,6 +8,8 @@ public:
   inline MapDrawer(Map* map) { setMap(map); }
   void generate();
   void drawPhysicalMap(const std::string &filename);
+  void drawHumidMap(const std::string &filename);
+  void drawTempMap(const std::string &filename);
   ~MapDrawer();
 };
 

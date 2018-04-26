@@ -336,6 +336,8 @@ int main() {
   //CreateBmp242("C:\\Output\\bit.png", testmap);//Довольно медленно, что не удивительно. Примерно дважды дольше версии со сравнением высот
   MapDrawer drawer(testmap);
   drawer.drawPhysicalMap("C:\\Output\\Map.png");
+  drawer.drawHumidMap("C:\\Output\\HumidMap.png");
+  drawer.drawTempMap("C:\\Output\\TempMap.png");
   t3 = high_resolution_clock::now();
   // CreateBmp24("C:\\Output\\bit2.png", testmap,testmap->avgHeight()*1.25);
   t4 = high_resolution_clock::now();
