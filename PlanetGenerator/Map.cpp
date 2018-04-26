@@ -43,5 +43,23 @@ float Map::maxHeight() {
   return max;
 }
 
+float Map::maxHumidity() {
+  float max = 0.0f;
+  for (int i = 0; i < Height_; i++)
+    for (int j = 0; j < Width_; j++)
+      if (data[i][j]->Humidity() > max)
+        max = data[i][j]->Humidity();
+  return max;
+}
+
+int Map::maxTemperature() {
+  int max = 0;
+  for (int i = 0; i < Height_; i++)
+    for (int j = 0; j < Width_; j++)
+      if (data[i][j]->Temperature() > max)
+        max = data[i][j]->Temperature();
+  return max;
+}
+
 Map::~Map(){
 }

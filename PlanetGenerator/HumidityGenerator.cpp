@@ -116,13 +116,6 @@ HumidityGenerator::HumidityGenerator(Map * newdata, float roughness){
         getMap()[i][j]->setHumid(1.0f);
 }
 
-float HumidityGenerator::maxHumidity() {
-  float max = 0.0;
-  for (int i = 0; i < getMap().Height(); i++)
-    for (int j = 0; j < getMap().Width(); j++)
-      max = (getMap()[i][j]->Humidity() > max) ? getMap()[i][j]->Humidity() : max;
-  return max;
-}
 
 void HumidityGenerator::smooth() {
   for (int i = 0; i<getMap().Height(); i++)

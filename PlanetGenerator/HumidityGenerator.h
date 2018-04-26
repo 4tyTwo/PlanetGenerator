@@ -14,7 +14,6 @@ public:
 
   //Get методы
   inline float roughness() { return roughness_; }
-  float maxHumidity();
   //Основной метод генерации карты высот
   void generate();
   void smooth(); //Возводит все значения высоты в квадрат для получения более плавного перехода

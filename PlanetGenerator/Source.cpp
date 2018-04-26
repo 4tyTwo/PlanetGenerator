@@ -329,7 +329,7 @@ int main() {
   //HumiditySetter::setHumidity(testmap);
   HumidityGenerator humgenerator(testmap,0.3f);
   humgenerator.generate();
-  TemperatureSetter::setTemperature(testmap,45);
+  TemperatureSetter::setTemperature(testmap,36);
   //createHumidMap("C:\\Output\\Humid.png",testmap);
   t2 = high_resolution_clock::now();
   //createTempMap("C:\\Output\\Temp.png",testmap);

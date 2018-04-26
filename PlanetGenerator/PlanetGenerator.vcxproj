@@ -121,6 +121,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BiomeGenerator.h" />
     <ClInclude Include="Generator.h" />
     <ClInclude Include="HeightGenerator.h" />
     <ClInclude Include="HumidityGenerator.h" />
@@ -132,6 +133,7 @@
     <ClInclude Include="Tile.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BiomeGenerator.cpp" />
     <ClCompile Include="coefficients.cpp" />
     <ClCompile Include="Generator.cpp" />
     <ClCompile Include="HeightGenerator.cpp" />

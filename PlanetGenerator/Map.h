@@ -20,6 +20,8 @@ public:
   //—лужебные методы
   float avgHeight(); //—редн€€ высота карты
   float maxHeight(); //—ама€ высока€ точка карты
+  float maxHumidity();
+  int maxTemperature(); 
   ~Map();
 private:
   int Height_,Width_;
