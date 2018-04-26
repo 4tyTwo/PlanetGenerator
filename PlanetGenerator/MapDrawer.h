@@ -10,6 +10,7 @@ public:
   void drawPhysicalMap(const std::string &filename);
   void drawHumidMap(const std::string &filename);
   void drawTempMap(const std::string &filename);
+  void drawBiomeMap(const std::string &filename);
   ~MapDrawer();
 };
 

@@ -8,6 +8,7 @@
 #include "RiverGenerator.h"
 #include "TemperatureSetter.h"
 #include "HumidityGenerator.h"
+#include "BiomeGenerator.h"
 #include "MapDrawer.h"
 using namespace std::chrono;
 
@@ -329,7 +330,9 @@ int main() {
   //HumiditySetter::setHumidity(testmap);
   HumidityGenerator humgenerator(testmap,0.3f);
   humgenerator.generate();
-  TemperatureSetter::setTemperature(testmap,36);
+  TemperatureSetter::setTemperature(testmap,42);
+  BiomeGenerator biomegen(testmap);
+  biomegen.generate();
   //createHumidMap("C:\\Output\\Humid.png",testmap);
   t2 = high_resolution_clock::now();
   //createTempMap("C:\\Output\\Temp.png",testmap);
@@ -338,6 +341,7 @@ int main() {
   drawer.drawPhysicalMap("C:\\Output\\Map.png");
   drawer.drawHumidMap("C:\\Output\\HumidMap.png");
   drawer.drawTempMap("C:\\Output\\TempMap.png");
+  drawer.drawBiomeMap("C:\\Output\\BiomeMap.png");
   t3 = high_resolution_clock::now();
   // CreateBmp24("C:\\Output\\bit2.png", testmap,testmap->avgHeight()*1.25);
   t4 = high_resolution_clock::now();

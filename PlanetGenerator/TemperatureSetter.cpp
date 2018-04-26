@@ -17,8 +17,11 @@ void TemperatureSetter::setTemperature(Map* map, int baseTemp) { //baseTemp - ба
   for (int i = 0; i < map->Height(); i++) {
     cordDiff = (abs(i - equator) / cordstep) * 0.6; //Снижение температуры из-за влияния широты
     for (int j = 0; j < map->Width(); j++) {
-      heightDiff = (*map)[i][j]->Height() / heightStep; //Снижение температуры из-за влияния высоты
-      currTemp = (baseTemp - cordDiff - heightDiff)/(*map)[i][j]->Humidity();
+      if ((*map)[i][j]->Height() > sealLevel)
+        heightDiff = ((*map)[i][j]->Height()-sealLevel) / heightStep; //Снижение температуры из-за влияния высоты
+      else
+        heightDiff = 0.0f;
+      currTemp = (baseTemp - cordDiff - heightDiff) * (*map)[i][j]->Humidity();
       (*map)[i][j]->setTemp(currTemp);
     }
   }
