@@ -4,9 +4,8 @@
 class Map
 {
 public:
-  //Конструктор
-  Map(int Height,int Width);
-  Map();
+  //Конструкторы
+  Map(int Height,int Width); //Со
 
   //Set методы
   void setSeaLevel(float sea);
@@ -20,10 +19,14 @@ public:
   //Служебные методы
   float avgHeight(); //Средняя высота карты
   float maxHeight(); //Самая высокая точка карты
-  float maxHumidity();
+  float maxHumidity(); //Максимальная влажность суши
+  float minHumidity(); //Минимальная влажность суши
   int maxTemperature(); 
+  
+  //Деструктор
   ~Map();
 private:
+  Map() {}
   int Height_,Width_;
   float SeaLevel_;
   Tile ***data;

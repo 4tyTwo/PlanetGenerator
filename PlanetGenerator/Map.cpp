@@ -1,10 +1,4 @@
 #include "Map.h"
-
-
-
-Map::Map(){
-}
-
 void Map::setSeaLevel(float sea){
   SeaLevel_ = (abs(sea) > 1.0f) ? 1.0f : abs(sea);
 }
@@ -47,9 +41,18 @@ float Map::maxHumidity() {
   float max = 0.0f;
   for (int i = 0; i < Height_; i++)
     for (int j = 0; j < Width_; j++)
-      if (data[i][j]->Humidity() > max)
+      if (data[i][j]->Humidity() > max && data[i][j]->Height() > SeaLevel_)
         max = data[i][j]->Humidity();
   return max;
+}
+
+float Map::minHumidity() {
+  float min = 1.0f;
+  for (int i = 0; i < Height_; i++)
+    for (int j = 0; j < Width_; j++)
+      if (data[i][j]->Humidity() < min && data[i][j]->Height() > SeaLevel_)
+        min = data[i][j]->Humidity();
+  return min;
 }
 
 int Map::maxTemperature() {
@@ -62,4 +65,10 @@ int Map::maxTemperature() {
 }
 
 Map::~Map(){
+  
+  for (int i = 0; i < Height_; i++) {
+    for (int j=0; j<Width_;j++)
+      delete data[i][j];
+  }
+  delete [] data;
 }

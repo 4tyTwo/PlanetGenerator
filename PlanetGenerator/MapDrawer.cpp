@@ -59,42 +59,42 @@ void MapDrawer::drawTempMap(const std::string & filename){
   for (int i = 0; i < width; i++)
     for (int j = 0; j < height; j++) {
         if (getMap()[j][i]->Type()!= 0 && getMap()[j][i]->Type() != 12){
-          if (getMap()[j][i]->Temperature() > 25) {
+          if (getMap()[j][i]->Temperature() > 21) {
             // 25+
             red = 255;
-            green = 0 + (getMap()[j][i]->Temperature() - 25) * 83 / 20; //из 0 в 83
+            green = 0 + (getMap()[j][i]->Temperature() - 21) * 83 / 20; //из 0 в 83
             blue = 0;
           }
           else {
-            if (getMap()[j][i]->Temperature() > 20) {
+            if (getMap()[j][i]->Temperature() > 16) {
               //20-25
               red = 255;
-              green = 83 + (getMap()[j][i]->Temperature() - 20) * 172 / 5; //Из 83 в 255
+              green = 83 + (getMap()[j][i]->Temperature() - 16) * 172 / 5; //Из 83 в 255
               blue = 0;
             }
             else {
-              if (getMap()[j][i]->Temperature() > 15) {
+              if (getMap()[j][i]->Temperature() > 11) {
                 //15-20
-                red = 255 - (getMap()[j][i]->Temperature() - 15) * 35; // Из 255 в 80
-                green = 255 - (getMap()[j][i]->Temperature() - 15) * 11; //Из 255 в 200
-                blue = 0 + (getMap()[j][i]->Temperature() - 15) * 24; //Из 0 в 120
+                red = 255 - (getMap()[j][i]->Temperature() - 11) * 35; // Из 255 в 80
+                green = 255 - (getMap()[j][i]->Temperature() - 11) * 11; //Из 255 в 200
+                blue = 0 + (getMap()[j][i]->Temperature() - 11) * 24; //Из 0 в 120
               }
               else {
-                if (getMap()[j][i]->Temperature() > 10) {
+                if (getMap()[j][i]->Temperature() > 7) {
                   //10-15
-                  red = 80 + (getMap()[j][i]->Temperature() - 10); //Из 80 в 85
-                  green = 200 - (getMap()[j][i]->Temperature() - 10) * 5; //Из 200 в 175
-                  blue = 120 + (getMap()[j][i]->Temperature() - 10) * 27; //Из 120 в 255
+                  red = 80 + (getMap()[j][i]->Temperature() - 7); //Из 80 в 85
+                  green = 200 - (getMap()[j][i]->Temperature() - 7) * 5; //Из 200 в 175
+                  blue = 120 + (getMap()[j][i]->Temperature() - 7) * 27; //Из 120 в 255
                 }
                 else {
-                  if (getMap()[j][i]->Temperature() > 5) {
+                  if (getMap()[j][i]->Temperature() > 0) {
                     //5-10
-                    red = 85 + (getMap()[j][i]->Temperature() - 5) * 170 / 5;
-                    green = 175 + (getMap()[j][i]->Temperature() - 5) * 80 / 5;
+                    red = 85 + (getMap()[j][i]->Temperature() - 0) * 170 / 7;
+                    green = 175 + (getMap()[j][i]->Temperature() - 0) * 80 / 7;
                     blue = 255;
                   }
                   else {
-                    //5-
+                    //0-
                     red = 255;
                     green = 255;
                     blue = 255;
@@ -129,11 +129,8 @@ void MapDrawer::drawBiomeMap(const std::string & filename){
     for (int j = 0; j < height; j++) {
       switch (getMap()[j][i]->Type()){
         case 0:{
-          if (getMap()[j][i]->Temperature() > 0)
-            red = 0, green = 0, blue = 255 - (seaLevel - getMap()[j][i]->Height())*255;
-          else
-            red = 240, green = 240, blue = 240;
-        break;
+          red = 0, green = 0, blue = 255 - (seaLevel - getMap()[j][i]->Height())*255;
+          break;
         }
         case 1:{
           red = 142, green = 71, blue = 53;
@@ -183,6 +180,10 @@ void MapDrawer::drawBiomeMap(const std::string & filename){
           red = 0; green = 0; blue = 255;   
           break;
         }      
+        case 13: {
+          red = 245, green = 245, blue = 245;
+          break;
+        }
       }
       pixels[(i + j * width) * 4] = red;
       pixels[(i + j * width) * 4 + 1] = green;

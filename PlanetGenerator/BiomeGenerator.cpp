@@ -1,18 +1,25 @@
 #include "BiomeGenerator.h"
 
-const float BiomeGenerator::tempCoeffs[6] = { 0.31f, 0.41f, 0.46f, 0.68f, 0.74f, 1.0f };
-const float BiomeGenerator::humidCoeffs[6] = { 0.25f, 0.31f, 0.47f, 0.64f, 0.72f, 1.0f };
+const float BiomeGenerator::tempCoeffs[6] = { 0.31f, 0.41f, 0.46f, 0.68f, 0.71f, 1.0f };
+const float BiomeGenerator::humidCoeffs[6] = { 0.25f, 0.31f, 0.47f, 0.61f, 0.68f, 1.0f };
 
 void BiomeGenerator::generate() {
   for (int i = 0; i < getMap().Height(); i++)
     for (int j = 0; j < getMap().Width(); j++) {
-      if(getMap()[i][j]->Type() != 1 && getMap()[i][j]->Type() != 0 && getMap()[i][j]->Type() != 12)
-        getMap()[i][j]->setType(placeZone(temperatureZone(getMap()[i][j]->Temperature()), humidityZone(getMap()[i][j]->Humidity())));
+      if(getMap()[i][j]->Type() != 0 && getMap()[i][j]->Type() != 12){
+        if (getMap()[i][j]->Type() != 1)
+          getMap()[i][j]->setType(placeZone(temperatureZone(getMap()[i][j]->Temperature()), humidityZone(getMap()[i][j]->Humidity())));
+        else
+          if (temperatureZone(getMap()[i][j]->Temperature()) == 0)
+            getMap()[i][j]->setType(13);
+      }
     }
 }
 
 int BiomeGenerator::placeZone(int tempZone, int humidZone) {
   //Очень некрасивый свитч
+  if (tempZone == 0)
+    return 13;
   switch (humidZone) {
     case 6: {
       if (tempZone >= 5)
@@ -75,14 +82,16 @@ int BiomeGenerator::placeZone(int tempZone, int humidZone) {
 
 BiomeGenerator::BiomeGenerator(Map* data) {
   setMap(data);
-  float maxHumid = getMap().maxHumidity(), maxTemp = getMap().maxTemperature();
+  float maxHumid = getMap().maxHumidity(), minHumid = getMap().minHumidity(), maxTemp = getMap().maxTemperature(), diff = maxHumid - minHumid;
   for (int i = 0; i < 6; i++) {
-    HumidBorders[i] = maxHumid * humidCoeffs[i];
+    HumidBorders[i] = minHumid + diff * humidCoeffs[i];
     TempBorders[i] = maxTemp * tempCoeffs[i];
   }
 }
 
 int BiomeGenerator::temperatureZone(int curr) {
+  if (curr <= 0)
+    return 0;
   if (between(0,TempBorders[1],curr))
     return 1;
   for ( int i = 1; i < 6; i++ )
@@ -91,7 +100,7 @@ int BiomeGenerator::temperatureZone(int curr) {
 }
 
 int BiomeGenerator::humidityZone(float curr) {
-  if (between(0, HumidBorders[1], curr))
+  if (between(-1.0f, HumidBorders[1], curr))
     return 1;
   for (int i = 1; i < 6; i++)
     if (between(HumidBorders[i - 1], HumidBorders[i], curr))

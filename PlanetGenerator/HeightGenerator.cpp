@@ -93,6 +93,8 @@ void HeightGenerator::generate() {
       getMap()[0][0]->setHeight(0.0f);
       getMap()[0][Width - 1]->setHeight(0.0f);
       getMap()[Height - 1][0]->setHeight(0.0f);
+      getMap()[Height/2][0]->setHeight(0.0f);
+      getMap()[Height / 2][Width-1]->setHeight(0.0f);
       getMap()[Height - 1][Width - 1]->setHeight(0.0f);
       getMap()[0][(Width - 1) / 2]->setHeight(0.0f);
       getMap()[Height - 1][(Width - 1) / 2]->setHeight(0.0f);

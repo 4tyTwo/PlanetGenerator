@@ -1,7 +1,7 @@
 #include "Tile.h"
 
 Tile::Tile(){ // онструктор по-умолчанию, особого смысла не несет
-  temperature_ =-273;
+  temperature_ = -273;
   humidity_ = 0.0;
   height_ = 0.0;
   type_ = -1;
@@ -26,7 +26,7 @@ void Tile::setHumid(float humid) {
 }
 
 void Tile::setTemp(int temp) {
-  temperature_ = (temp<-273) ? -273 : temp;
+  temperature_ = (temp < -273) ? -273 : temp;
 }
 
 void Tile::setType(int type) {

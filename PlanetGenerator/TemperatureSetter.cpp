@@ -21,7 +21,7 @@ void TemperatureSetter::setTemperature(Map* map, int baseTemp) { //baseTemp - ба
         heightDiff = ((*map)[i][j]->Height()-sealLevel) / heightStep; //Снижение температуры из-за влияния высоты
       else
         heightDiff = 0.0f;
-      currTemp = (baseTemp - cordDiff - heightDiff) * (*map)[i][j]->Humidity();
+      currTemp = (baseTemp - cordDiff - heightDiff) / (1.0f + (*map)[i][j]->Humidity()/2);
       (*map)[i][j]->setTemp(currTemp);
     }
   }
